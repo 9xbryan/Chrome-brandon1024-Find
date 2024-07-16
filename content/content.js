@@ -1,5 +1,5 @@
 'use strict';
-
+// import * as Find from "../app.mjs";
 /**
  * Create the Content namespace. This component is injected into the
  * page and delegates messages to the parser or highlighter.

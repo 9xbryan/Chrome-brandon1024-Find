@@ -1,4 +1,5 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup History namespace.
@@ -8,7 +9,7 @@
  * API that has caching capabilities and logic for pruning old history.
  * */
 Find.register('Popup.History', function (self) {
-
+self = Find.self;
 	let cachedHistory = null;
 	let currentHostname = null;
 

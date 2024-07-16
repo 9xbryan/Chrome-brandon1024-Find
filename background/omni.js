@@ -1,21 +1,31 @@
 'use strict';
 
+import * as Find from "../app.mjs";
+
+// if ( Find ) console.log( JSON.stringify( Find, null, 4 ) )
 /**
  * Create the Background Omni namespace. Registers various event listeners which invoke
  * the appropriate background functions.
  * */
+// console.log( `self before registering "Background.Omni":`, JSON.stringify( Find.self, null, 4 ) );
+
 Find.register("Background.Omni", function(self) {
+	// Object.assign( Find, self );
+	self = Find.self;
+
+	// console.log( `self After registering "Background.Omni":`, JSON.stringify( self, null, 4 ) );
+	// Find.self.Background = self.Background;
 
     Find.browser.omnibox.onInputStarted.addListener(() => {
         Find.browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            Find.Background.initializePage(tabs[0]);
+            Find.self.Background.initializePage(tabs[0]);
         });
     });
 
     retrieveOptions((options) => {
         Find.browser.omnibox.onInputChanged.addListener((regex) => {
             Find.browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                Find.Background.updateSearch({regex: regex, options: options}, tabs[0], (result) => {
+                Find.self.Background.updateSearch({regex: regex, options: options}, tabs[0], (result) => {
                     let description;
                     if (!regex) {
                         description = 'Enter a regular expression';
@@ -33,13 +43,13 @@ Find.register("Background.Omni", function(self) {
 
     Find.browser.omnibox.onInputCancelled.addListener(() => {
         Find.browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            Find.Background.restorePageState(tabs[0]);
+            Find.self.Background.restorePageState(tabs[0]);
         });
     });
 
     Find.browser.omnibox.onInputEntered.addListener(() => {
         Find.browser.tabs.query({active: true, currentWindow: true}, (tabs) => {
-            Find.Background.restorePageState(tabs[0], false);
+            Find.self.Background.restorePageState(tabs[0], false);
         });
     });
 
@@ -93,3 +103,6 @@ Find.register("Background.Omni", function(self) {
         });
     }
 });
+
+// console.log( `self before registering "Background.Omni":`, JSON.stringify( Find.self, null, 4 ) );
+// if ( Find ) console.log( JSON.stringify( Find, null, 4 ) )

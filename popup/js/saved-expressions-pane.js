@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup SavedExpressionsPane namespace.
  * */
 Find.register('Popup.SavedExpressionsPane', function (self) {
-
+self = Find.self;
 	/**
 	 * Initialize the saved expressions pane. Registers button event handlers, and loads
 	 * the saved expressions from local storage and builds expression entry elements.

@@ -1,61 +1,88 @@
 {
-  "name": "__MSG_extension_name__",
-  "short_name": "find+",
-  "version": "1",
-  "author": ["Michael Walz", "Brandon Richardson"],
-  "manifest_version": 2,
-  "description": "__MSG_extension_description__",
-  "default_locale": "en",
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "background",
-    "storage",
-    "contextMenus",
-    "<all_urls>"
+   "author": [  "Michael Walz", "Brandon Richardson", "Bryan Ho"],
+   "background": {
+    //   "persistent": false,
+    //   "scripts": [ "app.js", "/background/browser-action-proxy.js", "/background/content-proxy.js", "/background/background.js", "/background/omni.js" ],
+	  "service_worker": "find_sw.mjs"
+	  ,
+	  "type": "module"
+   },
+   "options_ui": {
+		"page": "./popup/popup.html",
+		"open_in_tab": false
+	},
+	"action": {
+		"default_icon": {
+			"19": "resources/icon.png",
+			"38": "resources/icon.png",
+			"48": "resources/icon.png"
+		},
+		"default_popup": "./popup/popup.html"
+	},
+//    "commands": {
+// 		"_execute_browser_action": {
+// 			"suggested_key": {
+// 				"default": "Ctrl+Shift+F",
+// 				"mac": "MacCtrl+Shift+F"
+// 			}
+// 		}
+// 		// ,
+// 		// "find_and_replace": {
+// 		// 	"suggested_key": {
+// 		// 		"default": "Ctrl+Shift+H",
+// 		// 		"mac": "MacCtrl+Shift+H"
+// 		// 	},
+// 		// 	"description": "Find and replace"
+// 		// }
+//    },
+   "content_scripts": [ {
+		"all_frames": false,
+		// "js": [
+		// 	// "app.js",
+		// 	"find_cs.js",
+		// 	"/lib/html-entity-handler/entityhandler.js",
+		// 	"/content/content.js",
+		// 	"/content/parser.js",
+		// 	"/content/highlighter.js"
+		// ],
+		"js": [
+			"find_cs.js"
+		],
+		"matches": ["<all_urls>"],
+		"run_at": "document_end"
+   } ],
+   "default_locale": "en",
+   "description": "__MSG_extension_description__",
+   "icons": {
+      "128": "resources/icon.png",
+      "16": "resources/icon.png",
+      "48": "resources/icon.png"
+   },
+   "incognito": "split",
+   "manifest_version": 3,
+   "name": "__MSG_extension_name__",
+   "offline_enabled": true,
+   "omnibox": {
+      "keyword": "find"
+   },
+   "permissions": [ "tabs", "activeTab", "background", "storage", "contextMenus", "offscreen","scripting" ],
+   "host_permissions": [
+//    "<all_urls>",
+   "https://*/*",
+   "http://*/*"
   ],
-  "icons": {
-    "128": "resources/icon.png",
-    "16": "resources/icon.png",
-    "48": "resources/icon.png"
-  },
-  "browser_action": {
-    "default_icon": "resources/icon.png",
-    "default_popup": "popup/popup.html"
-  },
-  "background": {
-    "scripts": [
-      "app.js",
-      "/background/browser-action-proxy.js",
-      "/background/content-proxy.js",
-      "/background/background.js",
-      "/background/omni.js"
-    ],
-    "persistent": false
-  },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "all_frames": false,
-    "run_at": "document_end",
-    "js": [
-      "app.js",
-      "/lib/html-entity-handler/entityhandler.js",
-      "/content/content.js",
-      "/content/parser.js",
-      "/content/highlighter.js"
-    ]
-  }],
-  "omnibox": {
-    "keyword" : "find"
-  },
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+F",
-        "mac": "MacCtrl+Shift+F"
-      }
-    }
-  },
-  "offline_enabled": true,
-  "incognito": "split"
+   "short_name": "Find+Replace",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2.2.2",
+   "version_name": "2.2.2 v3 fork alpha",
+   "web_accessible_resources": [{
+    "resources": [
+		"app.mjs",
+			"/lib/html-entity-handler/entityhandler.js",
+			"/content/content.js",
+			"/content/parser.js",
+			"/content/highlighter.js"
+	],
+    "matches": ["http://*/*", "https://*/*", "file:///*"]
+  }]
 }

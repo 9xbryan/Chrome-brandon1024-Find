@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup BrowserAction namespace.
  * */
 Find.register('Popup.BrowserAction', function (self) {
-
+self = Find.self;
     let initialized = false;
     let index = 0;
 

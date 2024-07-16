@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup BackgroundProxy namespace.
  * */
 Find.register('Popup.i18n', function (self) {
-
+self = Find.self;
     /**
      * Internationalize the browser action popup.
      *

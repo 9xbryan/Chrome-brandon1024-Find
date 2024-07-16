@@ -1,10 +1,19 @@
 'use strict';
 
+import * as Find from "../app.mjs";
+
+// if ( Find ) console.log( JSON.stringify( Find, null, 4 ) )
+
 /**
  * Create the Background ContentProxy namespace. Serves as mediator between the content
  * in the web page and the background scripts.
  * */
+// console.log( `self before registering "Background.ContentProxy":`, JSON.stringify( Find.self, null, 4 ) );
+
 Find.register("Background.ContentProxy", function(self) {
+	// Object.assign( Find, self );
+	self = Find.self;
+	// console.log( `self After registering "Background.ContentProxy":`, JSON.stringify( self, null, 4 ) );
 
     /**
      * Request from a given page a representation of the text nodes in the page's document.

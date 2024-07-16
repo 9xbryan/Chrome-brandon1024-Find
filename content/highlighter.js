@@ -1,11 +1,12 @@
 'use strict';
+// import * as Find from  "../app.mjs";
 
 /**
  * Create the Content Highlighter namespace. This component is injected into
  * the page and is used to highlight occurrences of a regex in the page.
  * */
 Find.register('Content.Highlighter', function(self) {
-
+	// self = Find.self;
     const indexHighlight = 'find-ext-index-highlight';
     const allHighlight = 'find-ext-all-highlight';
 

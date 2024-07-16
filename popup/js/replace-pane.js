@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup ReplacePane namespace.
  * */
 Find.register('Popup.ReplacePane', function (self) {
-
+self = Find.self;
     /**
      * Register event handlers.
      * */

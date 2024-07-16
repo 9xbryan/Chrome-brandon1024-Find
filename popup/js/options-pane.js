@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup OptionsPane namespace.
  * */
 Find.register('Popup.OptionsPane', function (self) {
-
+self = Find.self;
     /**
      * Default options. This object and all of it's properties are immutable.
      * To use this object, it must be cloned into a mutable object.

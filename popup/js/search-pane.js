@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup SearchPane namespace.
  * */
 Find.register('Popup.SearchPane', function (self) {
-
+self = Find.self;
     /**
      * Register event handlers.
      * */

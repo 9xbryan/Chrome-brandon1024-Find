@@ -1,9 +1,10 @@
 'use strict';
-
+import * as Find from "../../app.mjs";
 /**
  * Create the Popup BackgroundProxy namespace.
  * */
 Find.register('Popup.BackgroundProxy', function (self) {
+	self = Find.self;
     let port = Find.browser.runtime.connect({name: 'popup_to_background_port'});
 
     /**

@@ -1,4 +1,5 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup Storage namespace.
@@ -7,7 +8,7 @@
  * writes will have no effect. By default, the storage is unlocked.
  * */
 Find.register('Popup.Storage', function (self) {
-
+self = Find.self;
     const SAVED_EXPRESSIONS_KEY = 'expressions';
     const OPTIONS_KEY = 'options';
     const HISTORY_KEY = 'history';

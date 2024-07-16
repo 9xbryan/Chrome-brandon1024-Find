@@ -1,5 +1,7 @@
 'use strict';
 
+// import * as Find from "../app.mjs";
+
 /**
  * Create the Content Parser namespace. This component is injected into the
  * page and constructs a representation of the DOM, which will be used for
@@ -13,6 +15,7 @@
  * document representation object.
  * */
 Find.register('Content.Parser', function(self) {
+	// self = Find.self;
 
 	/**
 	 * Walk the pages DOM tree and construct the document representation object, while

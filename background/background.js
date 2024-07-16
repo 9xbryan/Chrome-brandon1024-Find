@@ -1,11 +1,23 @@
 'use strict';
 
+import * as Find from "../app.mjs";
+
+// if ( Find ) console.log( JSON.stringify( Find, null, 4 ) )
+
 /**
  * Create the Background namespace. The background coordinates activities between the browser
  * action popup and the content in the web page. The background keeps track of the state of the
  * search, along with other necessary data to seek, replace, and perform other actions efficiently.
  * */
+
+// console.log(`self before registering "Background":`, JSON.stringify(Find.self,null,4));
 Find.register("Background", function(self) {
+	// Object.assign( Find, self );
+	self = Find.self;
+
+	// console.log(`callback self: `, JSON.stringify(self, null, 4))
+	// console.log( `self After registering "Background":`, JSON.stringify( self, null, 4 ) );
+
 
     /**
      * Allocated on the namespace to allow the BrowserActionProxy to communicate installation
@@ -50,7 +62,8 @@ Find.register("Background", function(self) {
                     }
 
                     for (let i = 0; i < scripts.length; i++) {
-                        Find.Background.ContentProxy.executeScript(tabs[tabIndex], {file: scripts[i]});
+						if ( Find.self.Background.ContentProxy.executeScript )
+                        Find.self.Background.ContentProxy.executeScript(tabs[tabIndex], {file: scripts[i]});
                     }
                 }
             });
@@ -77,7 +90,7 @@ Find.register("Background", function(self) {
         let resp = {};
         resp.activeTab = tab;
 
-        Find.Background.ContentProxy.fetch(tab, (response) => {
+        Find.self.Background.ContentProxy.fetch(tab, (response) => {
             resp.isReachable = response && response.success;
             if(resp.isReachable) {
                 resp.selectedText = response.selection;
@@ -97,7 +110,7 @@ Find.register("Background", function(self) {
      * @param {function} callback - Optional callback .
      * */
     self.initializePage = function(tab, callback) {
-        Find.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
+        Find.self.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
             documentRepresentation = model;
 
             if (callback) {
@@ -116,11 +129,11 @@ Find.register("Background", function(self) {
      * */
     self.restorePageState = function(tab, restoreHighlights) {
         if(restoreHighlights === undefined || restoreHighlights) {
-            Find.Background.ContentProxy.clearPageHighlights(tab);
+            Find.self.Background.ContentProxy.clearPageHighlights(tab);
         }
 
         let uuids = getUUIDsFromModelObject(documentRepresentation);
-        Find.Background.ContentProxy.restoreWebPage(tab, uuids);
+        Find.self.Background.ContentProxy.restoreWebPage(tab, uuids);
 
         documentRepresentation = null;
         regexOccurrenceMap = null;
@@ -163,7 +176,7 @@ Find.register("Background", function(self) {
             //Ensure non-empty search
             if(regex.length === 0) {
                 sendResponse({action: 'empty_regex'});
-                Find.Background.ContentProxy.clearPageHighlights(tab);
+                Find.self.Background.ContentProxy.clearPageHighlights(tab);
                 return;
             }
 
@@ -182,7 +195,7 @@ Find.register("Background", function(self) {
             }
 
             //Invoke update action
-            Find.Background.ContentProxy.updatePageHighlights(tab, regex, index, regexOccurrenceMap, self.options);
+            Find.self.Background.ContentProxy.updatePageHighlights(tab, regex, index, regexOccurrenceMap, self.options);
 
             //If occurrence map empty, viewable index is zero
             let viewableIndex = index + 1;
@@ -203,7 +216,7 @@ Find.register("Background", function(self) {
             });
         } catch(e) {
             sendResponse({action: 'invalid_regex', error: e.message});
-            Find.Background.ContentProxy.clearPageHighlights(tab);
+            Find.self.Background.ContentProxy.clearPageHighlights(tab);
         }
     };
 
@@ -228,7 +241,7 @@ Find.register("Background", function(self) {
         }
 
         //Invoke seek action
-        Find.Background.ContentProxy.seekHighlight(tab, index, self.options);
+        Find.self.Background.ContentProxy.seekHighlight(tab, index, self.options);
 
         let viewableIndex = regexOccurrenceMap.length === 0 ? 0 : index+1;
         let viewableTotal = (indexCap && self.options.max_results <= regexOccurrenceMap.length) ?
@@ -250,15 +263,15 @@ Find.register("Background", function(self) {
      * @param {function} sendResponse - Function used to issue a response back to the popup.
      * */
     self.replaceNext = function(message, tab, sendResponse) {
-        Find.Background.ContentProxy.replaceOccurrence(tab, message.index - 1, message.replaceWith, message.options);
+        Find.self.Background.ContentProxy.replaceOccurrence(tab, message.index - 1, message.replaceWith, message.options);
 
         //Restore Web Page
-        Find.Background.ContentProxy.clearPageHighlights(tab);
+        Find.self.Background.ContentProxy.clearPageHighlights(tab);
 
         let uuids = getUUIDsFromModelObject(documentRepresentation);
-        Find.Background.ContentProxy.restoreWebPage(tab, uuids, () => {
+        Find.self.Background.ContentProxy.restoreWebPage(tab, uuids, () => {
             //Rebuild documentRepresentation and invalidate
-            Find.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
+            Find.self.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
                 documentRepresentation = model;
                 sendResponse({action: 'invalidate'});
             });
@@ -275,15 +288,15 @@ Find.register("Background", function(self) {
      * @param {function} sendResponse - Function used to issue a response back to the popup.
      * */
     self.replaceAll = function(message, tab, sendResponse) {
-        Find.Background.ContentProxy.replaceAllOccurrences(tab, message.replaceWith, message.options);
+        Find.self.Background.ContentProxy.replaceAllOccurrences(tab, message.replaceWith, message.options);
 
         //Restore Web Page
-        Find.Background.ContentProxy.clearPageHighlights(tab);
+        Find.self.Background.ContentProxy.clearPageHighlights(tab);
 
         let uuids = getUUIDsFromModelObject(documentRepresentation);
-        Find.Background.ContentProxy.restoreWebPage(tab, uuids, () => {
+        Find.self.Background.ContentProxy.restoreWebPage(tab, uuids, () => {
             //Rebuild documentRepresentation and invalidate
-            Find.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
+            Find.self.Background.ContentProxy.buildDocumentRepresentation(tab, (model) => {
                 documentRepresentation = model;
                 sendResponse({action: 'invalidate'});
             });
@@ -298,7 +311,7 @@ Find.register("Background", function(self) {
      * @param {function} sendResponse - Function used to issue a response back to the popup.
      * */
     self.followLinkUnderFocus = function(message, tab, sendResponse) {
-        Find.Background.ContentProxy.followLinkUnderFocus(tab);
+        Find.self.Background.ContentProxy.followLinkUnderFocus(tab);
         sendResponse({action: 'close'});
     };
 

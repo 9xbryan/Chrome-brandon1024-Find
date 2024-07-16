@@ -1,10 +1,11 @@
 'use strict';
+import * as Find from "../../app.mjs";
 
 /**
  * Create the Popup MessagePane namespace.
  * */
 Find.register('Popup.MessagePane', function (self) {
-
+self = Find.self;
     /**
      * Display an error message that indicates that the current URL is forbidden.
      * */

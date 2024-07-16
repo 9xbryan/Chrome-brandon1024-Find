@@ -1,10 +1,17 @@
 'use strict';
 
+import * as Find from "../app.mjs";
+
+// if (Find) console.log(JSON.stringify(Find, null, 4))
+
 /**
  * Create the Background ContentProxy namespace. Serves as mediator between the background scripts
  * and the browser action popup.
  * */
+// console.log( `self before registering "Background.BrowserActionProxy":`, JSON.stringify( Find.self, null, 4 ) );
 Find.register("Background.BrowserActionProxy", function() {
+	// console.log( `self After registering "Background.BrowserActionProxy":`, JSON.stringify( Find.self, null, 4 ) );
+
 
     /**
      * Initialize the port connection with the browser action popup.
@@ -14,9 +21,9 @@ Find.register("Background.BrowserActionProxy", function() {
             return;
         }
 
-        if(Find.Background.installationDetails) {
-            browserActionPort.postMessage({action: 'install', details: Find.Background.installationDetails});
-            Find.Background.installationDetails = null;
+        if(Find.self.Background.installationDetails) {
+            browserActionPort.postMessage({action: 'install', details: Find.self.Background.installationDetails});
+            Find.self.Background.installationDetails = null;
         }
 
         let activeTab = null;
@@ -32,10 +39,10 @@ Find.register("Background.BrowserActionProxy", function() {
 
             // handle extension close
             browserActionPort.onDisconnect.addListener(() => {
-                if(!Find.Background.options || !Find.Background.options.persistent_highlights) {
-                    Find.Background.restorePageState(activeTab);
+                if(!Find.self.Background.options || !Find.self.Background.options.persistent_highlights) {
+                    Find.self.Background.restorePageState(activeTab);
                 } else {
-                    Find.Background.restorePageState(activeTab, false);
+                    Find.self.Background.restorePageState(activeTab, false);
                 }
 
                 activeTab = null;
@@ -56,28 +63,28 @@ Find.register("Background.BrowserActionProxy", function() {
         let action = message.action;
         switch(action) {
             case 'update':
-                Find.Background.updateSearch(message, tab, sendResponse);
+                Find.self.Background.updateSearch(message, tab, sendResponse);
                 break;
             case 'next':
-                Find.Background.seekSearch(message, true, tab, sendResponse);
+                Find.self.Background.seekSearch(message, true, tab, sendResponse);
                 break;
             case 'previous':
-                Find.Background.seekSearch(message, false, tab, sendResponse);
+                Find.self.Background.seekSearch(message, false, tab, sendResponse);
                 break;
             case 'replace_next':
-                Find.Background.replaceNext(message, tab, sendResponse);
+                Find.self.Background.replaceNext(message, tab, sendResponse);
                 break;
             case 'replace_all':
-                Find.Background.replaceAll(message, tab, sendResponse);
+                Find.self.Background.replaceAll(message, tab, sendResponse);
                 break;
             case 'follow_link':
-                Find.Background.followLinkUnderFocus(message, tab, sendResponse);
+                Find.self.Background.followLinkUnderFocus(message, tab, sendResponse);
                 break;
             case 'browser_action_init':
-                Find.Background.initializeBrowserAction(message, tab, sendResponse);
+                Find.self.Background.initializeBrowserAction(message, tab, sendResponse);
                 break;
             case 'get_occurrence':
-                Find.Background.extractOccurrences(message, tab, sendResponse);
+                Find.self.Background.extractOccurrences(message, tab, sendResponse);
                 break;
         }
     }
